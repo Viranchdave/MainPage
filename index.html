@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SAFAR - Image Slideshow</title>
+
+  <style>
+    :root {
+      --main-bg: #000;
+      --text-color: #fff;
+      --font-family: 'Segoe UI', 'Arial', sans-serif;
+      --overlay-scale: 1.05;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: var(--font-family);
+      background: var(--main-bg);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .section {
+      height: 33.33vh;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .slide.active {
+      opacity: 1;
+    }
+
+    .center-text {
+      position: fixed;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-weight: bold;
+      font-style: italic;  /* Set text to italic */
+      font-size: 6em;  /* Increased font size */
+      color: var(--text-color);
+      text-shadow:
+        0 0 5px #fff,
+        0 0 10px #ffd700,
+        0 0 15px #ffa500,
+        0 0 20px #ff8c00;
+      z-index: 1000;
+      pointer-events: none;
+      letter-spacing: 0.1em; /* Increased letter spacing */
+      animation: textPulse 6s ease-in-out infinite;
+    }
+
+    @keyframes textPulse {
+      0%   { transform: translateX(-50%) scale(1); opacity: 1; }
+      50%  { transform: translateX(-50%) scale(1.05); opacity: 0.95; }
+      100% { transform: translateX(-50%) scale(1); opacity: 1; }
+    }
+
+    .center-overlay {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70vw;
+      height: 80vh;
+      z-index: 999;
+      object-fit: contain;
+      animation: pulse 6s infinite;
+    }
+
+    @keyframes pulse {
+      0%   { transform: translate(-50%, -50%) scale(1); }
+      50%  { transform: translate(-50%, -50%) scale(var(--overlay-scale)); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .center-overlay {
+        width: 90vw;
+        height: auto;
+      }
+
+      .center-text {
+        font-size: 5em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .center-text {
+        font-size: 4em;
+      }
+
+      .section {
+        height: 33.33vh;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Section 1 -->
+  <div class="section" id="section1">
+    <div class="slide active" style="background-image: url('https://tinypic.host/images/2025/05/02/IMG_20241015_100311-min.jpg');"></div>
+    <div class="slide" style="background-image: url('https://tinypic.host/images/2025/05/03/20211126_120307-min.jpg');"></div>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="section" id="section2">
+    <div class="slide active" style="background-image: url('https://tinypic.host/images/2025/04/27/IMG_20241015_095851-min.jpg');"></div>
+    <div class="slide" style="background-image: url('https://tinypic.host/images/2025/05/03/20210828_132729-min.jpg');"></div>
+  </div>
+
+  <!-- Section 3 -->
+  <div class="section" id="section3">
+    <div class="slide active" style="background-image: url('https://tinypic.host/images/2025/04/27/20210825_123744-min.jpg');"></div>
+    <div class="slide" style="background-image: url('https://tinypic.host/images/2025/05/03/IMG-20190303-WA0005-1.jpg');"></div>
+  </div>
+
+  <!-- Centered Branding Text -->
+  <div class="center-text" aria-label="Slideshow brand title">SAFAR</div>
+
+  <!-- Centered Overlay Image -->
+  <img class="center-overlay" src="https://tinypic.host/images/2025/05/02/boundary_3_cropped.png" alt="Decorative overlay image" loading="lazy" />
+
+  <script>
+    function startSlideshow(sectionId) {
+      const section = document.getElementById(sectionId);
+      const slides = section.querySelectorAll(".slide");
+      let current = 0;
+
+      function nextSlide() {
+        slides[current].classList.remove('active');
+        current = (current + 1) % slides.length;
+        slides[current].classList.add('active');
+      }
+
+      let interval = setInterval(nextSlide, 4000);
+
+      section.addEventListener('mouseenter', () => clearInterval(interval));
+      section.addEventListener('mouseleave', () => interval = setInterval(nextSlide, 4000));
+    }
+
+    // Start slideshows for all sections
+    ["section1", "section2", "section3"].forEach(startSlideshow);
+  </script>
+
+</body>
+</html>
+
